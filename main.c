@@ -5,6 +5,14 @@
 
 int main(int argc,char *argv[])
 {
+    if(argv[1][0]=='-'||argv[1][0]=='+')
+    {
+        argv[1][0]='0';
+    }
+    if(argv[3][0]=='-'||argv[3][0]=='+')
+    {
+        argv[3][0]='0';
+    }
     dlist *head1=NULL;dlist *tail1=NULL;//Operand 1 
     dlist *head2=NULL;dlist *tail2=NULL;//Operand 2
     dlist *head3=NULL;dlist *tail3=NULL;//Result
