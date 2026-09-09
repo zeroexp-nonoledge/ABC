@@ -16,6 +16,7 @@ status add(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, dlist **h
 status sub(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, dlist **head3, dlist **tail3);
 status mul(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, dlist **head3, dlist **tail3);
 status my_division(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, dlist **head3, dlist **tail3);
+char set_di(char *argv[]);
 
 void print_result(dlist **head3,dlist **tail3);
 

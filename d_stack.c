@@ -572,12 +572,7 @@ status my_division(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, d
         return failure;
     }
 
-    // Reset result list pointers
-    *head3 = NULL;
-    *tail3 = NULL;
-
-    // Helper working list for operand 1 (copying list 1)
-    dlist *work_head = NULL;
+     dlist *work_head = NULL;
     dlist *work_tail = NULL;
 
     dlist *curr = *head1;
@@ -719,4 +714,76 @@ status my_division(dlist **head1, dlist **tail1, dlist **head2, dlist **tail2, d
 
     printf("Division Successful\n");
     return success;
+}
+char set_di(char *argv[])
+{
+    if (argv == NULL || argv[1] == NULL || argv[2] == NULL || argv[3] == NULL) {
+        return '0';
+    }
+
+    // Determine initial operational signs (+ by default if a digit)
+    char s1 = (argv[1][0] == '+' || argv[1][0] == '-') ? argv[1][0] : '+';
+    char s2 = (argv[3][0] == '+' || argv[3][0] == '-') ? argv[3][0] : '+';
+
+    char op = argv[2][0];
+
+    /* --- MULTIPLICATION & DIVISION SIGN LOGIC --- */
+    if (op == '*' || op == '/')
+    {
+        if (argv[1][0] == '+' || argv[1][0] == '-') argv[1][0] = '0';
+        if (argv[3][0] == '+' || argv[3][0] == '-') argv[3][0] = '0';
+
+        // Different signs give negative output, same signs give positive
+        return (s1 != s2) ? '-' : '0';
+    }
+
+    /* --- ADDITION & SUBTRACTION SIGN LOGIC --- */
+    
+    // Case 1: (+A) + (+B)  OR  (+A) - (-B)
+    if ((s1 == '+' && op == '+' && s2 == '+') || (s1 == '+' && op == '-' && s2 == '-'))
+    {
+        if (argv[1][0] == '+') argv[1][0] = '0';
+        if (argv[3][0] == '+' || argv[3][0] == '-') argv[3][0] = '0';
+        argv[2][0] = '+'; // Force addition
+        return '0';
+    }
+
+    // Case 2: (-A) + (-B)  OR  (-A) - (+B)
+    if ((s1 == '-' && op == '+' && s2 == '-') || (s1 == '-' && op == '-' && s2 == '+'))
+    {
+        argv[1][0] = '0';
+        if (argv[3][0] == '+' || argv[3][0] == '-') argv[3][0] = '0';
+        argv[2][0] = '+'; // Force addition of magnitudes
+        return '-';       // Combined magnitude is negative
+    }
+
+    // Case 3: Mixed signs converted to subtraction
+    // Handles (+A) + (-B), (+A) - (+B), (-A) + (+B), (-A) - (-B)
+    argv[1][0] = '0';
+    if (argv[3][0] == '+' || argv[3][0] == '-') argv[3][0] = '0';
+    argv[2][0] = '-'; // Force magnitude subtraction
+
+    int m = strlen(argv[1]);
+    int n = strlen(argv[3]);
+
+    if (s1 == '+' && (op == '+' || op == '-'))
+    {
+        // (+A) combined with (-B) -> Positive if |A| > |B|
+        if (m > n) return '0';
+        if (n > m) return '-';
+
+        int d = strcmp(argv[1], argv[3]);
+        if (d >= 0) return '0';
+        return '-';
+    }
+    else // s1 == '-'
+    {
+        // (-A) combined with (+B) -> Negative if |A| > |B|
+        if (m > n) return '-';
+        if (n > m) return '0';
+
+        int d = strcmp(argv[1], argv[3]);
+        if (d > 0) return '-';
+        return '0';
+    }
 }

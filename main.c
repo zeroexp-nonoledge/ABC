@@ -1,21 +1,21 @@
 #include<stdio.h>
 #include<string.h>
+#include <ctype.h>
 #include "d_stack.h"
 #include "types.h"
 
 int main(int argc,char *argv[])
 {
-    if(argv[1][0]=='-'||argv[1][0]=='+')
-    {
-        argv[1][0]='0';
-    }
-    if(argv[3][0]=='-'||argv[3][0]=='+')
-    {
-        argv[3][0]='0';
-    }
+    char ret;
     dlist *head1=NULL;dlist *tail1=NULL;//Operand 1 
     dlist *head2=NULL;dlist *tail2=NULL;//Operand 2
     dlist *head3=NULL;dlist *tail3=NULL;//Result
+    //////////////////////////////////////////////////////
+    if(!isdigit(argv[1][0])||!isdigit(argv[3][0]))
+    {
+       ret=set_di(argv);
+    }
+    //////////////////////////////////////////////////////
     if(validate(argv,&head1,&tail1,&head2,&tail2)==failure)
     {
         printf("Validation Failed\n");
@@ -47,7 +47,10 @@ int main(int argc,char *argv[])
         printf("Symbol not recognised\n ");
             break;
         }
-
+       if(ret!='0')
+       {
+        printf("%c",ret);
+       }
         print_result(&head3,&tail3);
         printf("\n");    
 
